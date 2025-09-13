@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   }
 
   getStatus() {
-    this.api.get<{ status: string }>(environment.API_URL + "/listing")
+    this.api.get<{ status: string }>(environment.API_URL + "/status")
       .pipe(takeUntilDestroyed(this.#dRef))
       .subscribe(status => {
         this.status.set(status.status)

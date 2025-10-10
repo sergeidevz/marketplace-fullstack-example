@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
     <h1>Profile page</h1>
   `,
 })
-export class ProfileComponent {
-}
+export class ProfileComponent {}

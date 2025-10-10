@@ -1,31 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { environment } from '../environments/environment';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  imports: [RouterOutlet],
+  styles: ``,
+  template: `
+    <main>
+      <router-outlet />
+    </main>
+  `,
 })
-export class AppComponent implements OnInit {
-  title = 'frontend-angular';
-
-  api = inject(HttpClient)
-  #dRef = inject(DestroyRef)
-
-  status = signal("disabled")
-
-  ngOnInit(): void {
-    this.getStatus()
-  }
-
-  getStatus() {
-    this.api.get<{ status: string }>(environment.API_URL + "/status")
-      .pipe(takeUntilDestroyed(this.#dRef))
-      .subscribe(status => {
-        this.status.set(status.status)
-      })
-  }
-}
+export class AppComponent {}

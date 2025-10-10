@@ -15,6 +15,7 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    // TODO: unauth guard
   },
   {
     path: 'listings',
@@ -27,10 +28,12 @@ export const routes: Routes = [
   {
     path: 'manage-listings',
     component: AdManagementComponent,
+    // TODO: auth guard
   },
   {
     path: 'profile',
     component: ProfileComponent,
+    // TODO: auth guard
   },
   {
     path: '**',

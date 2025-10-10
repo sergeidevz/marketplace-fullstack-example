@@ -43,7 +43,7 @@ import { RouterLink } from '@angular/router';
       <ul class="nav-list">
         <li><a routerLink="/listings">Listings</a></li>
         @if (isAuth) {
-          <li><a routerLink="/your-listings">Your listings</a></li>
+          <li><a routerLink="/manage-listings">Your listings</a></li>
           <li><a routerLink="/profile">Profile</a></li>
           <li><a href="" (click)="onLogout()">Logout</a></li>
         } @else {

@@ -1,8 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Listing } from '../models/listing';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-page-ads',
+  imports: [RouterLink],
   styles: `
     .list-item {
       background: teal;
@@ -11,6 +13,12 @@ import { Listing } from '../models/listing';
       justify-content: space-between;
       gap: 20px;
       color: white;
+      user-select: none;
+      cursor: pointer;
+
+      &:hover {
+        background: red;
+      }
     }
 
     .list {
@@ -25,7 +33,7 @@ import { Listing } from '../models/listing';
 
     <ul class="list">
       @for (listing of listings(); track listing.id) {
-        <li class="list-item">
+        <li [routerLink]="['/listings', listing.id]" class="list-item">
           <span>{{ listing.title.toUpperCase() }}</span>
           <span>{{ listing.category }}</span>
           <span>{{ listing.price }} {{ listing.currency }}</span>
@@ -35,6 +43,8 @@ import { Listing } from '../models/listing';
   `,
 })
 export class AdsComponent {
+
+
   // TEST: test data
   listings = signal<Listing[]>([
     {

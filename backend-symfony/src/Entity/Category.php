@@ -61,7 +61,7 @@ class Category
     {
         if (!$this->listings->contains($listing)) {
             $this->listings->add($listing);
-            $listing->setCategoryId($this);
+            $listing->setCategory($this);
         }
 
         return $this;
@@ -71,8 +71,8 @@ class Category
     {
         if ($this->listings->removeElement($listing)) {
             // set the owning side to null (unless already changed)
-            if ($listing->getCategoryId() === $this) {
-                $listing->setCategoryId(null);
+            if ($listing->getCategory() === $this) {
+                $listing->setCategory(null);
             }
         }
 

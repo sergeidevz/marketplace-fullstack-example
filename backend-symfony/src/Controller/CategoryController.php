@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api/categories', format: "json")]
+#[Route('/api/categories', format: 'json')]
 final class CategoryController extends AbstractController
 {
     public function __construct(
         private CategoryRepository $categoryRepository,
+        private EntityManagerInterface $entityManager
     ) {
     }
 
@@ -21,15 +23,13 @@ final class CategoryController extends AbstractController
     public function getAll(): JsonResponse
     {
         $categories = $this->categoryRepository->findAll();
-
         return $this->json(compact('categories'), 201);
     }
-
 
     #[Route('/{id}', methods: ['GET'])]
     public function getById(string $id): JsonResponse
     {
-        $category = $this->categoryRepository->findOneBy(["id", $id]);
+        $category = $this->categoryRepository->find($id);
         if (!$category) {
             throw $this->createNotFoundException();
         }
@@ -43,13 +43,15 @@ final class CategoryController extends AbstractController
         return $this->json($id);
     }
 
-    #[Route("/{id}", methods: ["DELETE"])]
+    #[Route('/{id}', methods: ['DELETE'])]
     public function delete(string $id): JsonResponse
     {
-        $this->categoryRepository->createQueryBuilder('delete', 'd')
-            ->delete('categories', 'c')
-            ->where('id = :id')
-            ->setParameter('id', $id);
+
+        $category = $this->categoryRepository->find($id);
+        if (!$category) throw $this->createNotFoundException();
+
+        $this->entityManager->remove($category);
+        $this->entityManager->flush();
 
         return $this->json('Deleted');
     }

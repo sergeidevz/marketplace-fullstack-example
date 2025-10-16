@@ -2,16 +2,18 @@
 
 namespace App\Tests\Controller;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CategoryTest extends ApiTestCase
+class CategoryTest extends WebTestCase
 {
     public function testSomething(): void
     {
-        $response = static::createClient()->request('GET', '/api/categories');
-        $code = $response->getStatusCode();
 
-        dd($code);
+        // dump(self::getContainer());
+        //  exit;
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/api/categories/');
 
         $this->assertResponseIsSuccessful();
     }

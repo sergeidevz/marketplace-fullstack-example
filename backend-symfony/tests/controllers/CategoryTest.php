@@ -8,6 +8,7 @@ use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CategoryTest extends WebTestCase
 {
@@ -18,18 +19,17 @@ class CategoryTest extends WebTestCase
     {
         parent::setUp();
 
-        $categoryRepo = $this->createMock(CategoryRepository::class);
-        $categoryRepo->expects(self::once())
-            ->method('findAll')
-            ->willReturn([]);
-
         $this->client = static::createClient();
         $this->container = static::getContainer();
-        $this->container->set(CategoryRepository::class, $categoryRepo);
     }
 
     public function testGetCategories(): void
     {
+        $categoryRepo = $this->createMock(CategoryRepository::class);
+        $categoryRepo->expects(self::once())
+            ->method('findAll')
+            ->willReturn([]);
+        $this->container->set(CategoryRepository::class, $categoryRepo);
         $this->client->request('GET', '/api/categories/');
         $response = $this->client->getResponse();
         $content = $response->getContent();
@@ -39,7 +39,18 @@ class CategoryTest extends WebTestCase
         $this->assertResponseStatusCodeSame(200);
         $this->assertJson($content);
 
-        $this->assertArrayHasKey("categories", $object);
+        $this->assertArrayHasKey('categories', $object);
     }
 
+    public function testGetCategoryById(): void
+    {
+        $categoryRepo = $this->createMock(CategoryRepository::class);
+        $categoryRepo->expects(self::once())
+            ->method('find')
+            ->willThrowException(new NotFoundHttpException());
+        $this->container->set(CategoryRepository::class, $categoryRepo);
+        $id = '123';
+        $this->client->request('GET', "/api/categories/$id");
+        $this->assertResponseStatusCodeSame(404);
+    }
 }

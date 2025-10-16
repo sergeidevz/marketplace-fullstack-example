@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -22,12 +23,14 @@ class Category
     private ?Uuid $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Listing>
      */
     #[ORM\OneToMany(targetEntity: Listing::class, mappedBy: 'category')]
+    #[Assert\NotBlank]
     private Collection $listings;
 
     public function __construct()
@@ -35,7 +38,7 @@ class Category
         $this->listings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

@@ -23,7 +23,7 @@ final class CategoryController extends AbstractController
     public function getAll(): JsonResponse
     {
         $categories = $this->categoryRepository->findAll();
-        return $this->json(compact('categories'), 201);
+        return $this->json(compact('categories'));
     }
 
     #[Route('/{id}', methods: ['GET'])]

@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Uid\Uuid;
 
 class CategoryTest extends WebTestCase
 {
@@ -49,7 +50,7 @@ class CategoryTest extends WebTestCase
             ->method('find')
             ->willThrowException(new NotFoundHttpException());
         $this->container->set(CategoryRepository::class, $categoryRepo);
-        $id = '123';
+        $id = Uuid::v7();
         $this->client->request('GET', "/api/categories/$id");
         $this->assertResponseStatusCodeSame(404);
     }

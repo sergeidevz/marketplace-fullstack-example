@@ -40,7 +40,7 @@ final class CategoryController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->json($id);
+        return $this->json(['category' => $category]);
     }
 
     #[Route('/', methods: ['POST'])]

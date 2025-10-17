@@ -39,9 +39,6 @@ class Listing
     #[ORM\Column(length: 55)]
     private ?string $status = null;
 
-    #[ORM\OneToOne]
-    private ?Listing $listing = null;
-
     /**
      * @var Collection<int, ListingImage>
      */

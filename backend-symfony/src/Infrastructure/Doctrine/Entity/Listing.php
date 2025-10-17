@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Repository\ListingRepository;
 use Doctrine\Common\Collections\ArrayCollection;

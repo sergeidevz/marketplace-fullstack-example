@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Controller\DTO\CreateListingDTO;
@@ -11,8 +13,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Polyfill\Intl\Icu\Exception\NotImplementedException;
 
 #[Route('/api/listings', format: 'json')]
 final class ListingController extends AbstractController
@@ -33,7 +37,6 @@ final class ListingController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}', methods: ['GET'])]
     public function getById(Uuid $id): JsonResponse
     {
@@ -44,7 +47,6 @@ final class ListingController extends AbstractController
 
         return $this->json(['listing' => $listing]);
     }
-
 
     #[Route('/', methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateListingDTO $dto): JsonResponse
@@ -60,7 +62,7 @@ final class ListingController extends AbstractController
         $listing = new Listing()
             ->setTitle($dto->title)
             ->setCategory($foundCategory)
-;
+        ;
 
         $this->entityManager->persist($listing);
         $this->entityManager->flush();
@@ -69,24 +71,26 @@ final class ListingController extends AbstractController
     }
 
     #[Route('/', methods: ['PUT'])]
-    public function update(#[MapRequestPayload] UpdateListingDTO $dto): JsonResponse
+    public function update(Uuid $id, #[MapRequestPayload] UpdateListingDTO $dto): JsonResponse
     {
-        $categoryRepo = $this->entityManager->getRepository(CategoryRepository::class);
+        throw new NotImplementedException("Not implemented");
+        $foundListing = $this->listingRepository->find($id);
 
-        $foundCategory = $categoryRepo->find($dto->categoryId);
-
-        if (!$foundCategory) {
-            throw $this->createNotFoundException();
+        if (!$foundListing) {
+            throw new NotFoundHttpException();
         }
-
-        $listing = new Listing()
-            ->setTitle($dto->title)
-            ->setCategory($foundCategory)
-;
 
         $this->entityManager->persist($listing);
         $this->entityManager->flush();
 
         return $this->json(['category' => $listing]);
+    }
+
+    #[Route('/{id}', methods: ['DELETE'])]
+    public function delete(string $id): JsonResponse
+    {
+        throw new NotImplementedException("Not implemented");
+
+        return $this->json(['message' => 'success']);
     }
 }

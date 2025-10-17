@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Doctrine\Entity;
 
+use App\Domain\Category as CategoryDomain;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,9 +39,37 @@ class Category
         $this->listings = new ArrayCollection();
     }
 
+    public function toDomain(): CategoryDomain
+    {
+        return new CategoryDomain(
+            id : $this->id->toRfc4122(),
+            name : $this->name,
+        );
+    }
+
+    public static function fromDomain(CategoryDomain $domain): self
+    {
+        $entity = new Category();
+
+        $entity->setName($domain->name);
+
+        if (null !== $domain->id) {
+            $entity->setId(Uuid::fromString($domain->id));
+        }
+
+        return $entity;
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getName(): ?string

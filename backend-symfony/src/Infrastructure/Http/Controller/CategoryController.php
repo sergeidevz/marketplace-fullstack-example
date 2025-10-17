@@ -55,7 +55,7 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(string $id, #[MapRequestPayload] UpdateCategoryDTO $dto): JsonResponse
+    public function update(Uuid $id, #[MapRequestPayload] UpdateCategoryDTO $dto): JsonResponse
     {
         $foundCategory = $this->categoryRepository->find($id);
         if (!$foundCategory) {

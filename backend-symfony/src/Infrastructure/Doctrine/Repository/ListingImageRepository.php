@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Infrastructure\Doctrine\Repository;
 
-use App\Entity\ListingPayment;
+use App\Entity\ListingImage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ListingPayment>
+ * @extends ServiceEntityRepository<ListingImage>
  */
-class ListingPaymentRepository extends ServiceEntityRepository
+class ListingImageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ListingPayment::class);
+        parent::__construct($registry, ListingImage::class);
     }
 
     //    /**
-    //     * @return ListingPayment[] Returns an array of ListingPayment objects
+    //     * @return ListingImage[] Returns an array of ListingImage objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -33,7 +33,7 @@ class ListingPaymentRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ListingPayment
+    //    public function findOneBySomeField($value): ?ListingImage
     //    {
     //        return $this->createQueryBuilder('l')
     //            ->andWhere('l.exampleField = :val')

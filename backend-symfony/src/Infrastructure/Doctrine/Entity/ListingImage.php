@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Repository\ListingImageRepository;
 use Doctrine\DBAL\Types\Types;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Repository\UserRepository;
+use App\Infrastructure\Doctrine\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,10 +49,16 @@ class User
         $this->reviews = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
+
+    public function setId(Uuid $id): static {
+       $this->id = $id;
+       return $this;
+    }
+
 
     public function getName(): ?string
     {

@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface IMessageRepository
 {
-    public function save(Message $domain);
+    public function save(Message $domain): void;
 
     /**
      * @return Message[]
@@ -14,4 +14,6 @@ interface IMessageRepository
     public function findAll(): array;
 
     public function findById(string $id): ?Message;
+
+    public function remove(Message $domain): void;
 }

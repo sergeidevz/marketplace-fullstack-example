@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface IUserRepository
 {
-    public function save(Listing $domain);
+    public function save(Listing $domain): void;
 
     /**
      * @return User[]
@@ -19,5 +19,5 @@ interface IUserRepository
 
     public function findByDisplayName(string $displayName): ?User;
 
-    public function remove(string $id);
+    public function remove(User $domain): void;
 }

@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Controller\DTO;
+namespace App\Application\DTO;
 
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class UpdateListingDTO
+final class CreateListingDTO
 {
     #[Assert\NotBlank]
     #[Assert\Length(min: 5, max: 10)]
-    public ?string $title;
+    public string $title;
 
     #[Assert\Range(min: 3)]
-    public ?int $price;
+    public int $price;
 
-    public ?int $description;
+    public int $description;
 
     #[Assert\Uuid]
-    public ?Uuid $categoryId;
+    public Uuid $categoryId;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 4)]
-    public ?string $currency;
+    public string $currency;
 
-    public ?string $location;
+    public string $location;
 
-    public ?string $status;
+    public string $status;
 }

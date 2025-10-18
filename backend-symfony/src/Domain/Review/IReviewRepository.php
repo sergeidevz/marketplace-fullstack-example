@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface IReviewRepository
 {
-    public function save(Review $domain);
+    public function save(Review $domain): void;
 
     /**
      * @return Review[]
@@ -15,5 +15,5 @@ interface IReviewRepository
 
     public function findById(string $id): ?Review;
 
-    public function remove(string $id);
+    public function remove(Review $domain): void;
 }

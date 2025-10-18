@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface ICategoryRepository
 {
-    public function save(Category $domain);
+    public function save(Category $domain): void;
 
     /**
      * @return Category[]
@@ -15,5 +15,5 @@ interface ICategoryRepository
 
     public function findById(string $id): ?Category;
 
-    public function remove(Category $domain);
+    public function remove(Category $domain): void;
 }

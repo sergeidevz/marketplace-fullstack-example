@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface IListingRepository
 {
-    public function save(Listing $domain);
+    public function save(Listing $domain): void;
 
     /**
      * @return Listing[]
@@ -15,5 +15,5 @@ interface IListingRepository
 
     public function findById(string $id): ?Listing;
 
-    public function remove(string $id);
+    public function remove(Listing $domain): void;
 }

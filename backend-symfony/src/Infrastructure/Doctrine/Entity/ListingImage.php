@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Repository\ListingImageRepository;
+use App\Infrastructure\Doctrine\Repository\ListingImageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -26,9 +26,16 @@ class ListingImage
     #[ORM\JoinColumn(nullable: false)]
     private ?Listing $listing = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getLocation(): ?string

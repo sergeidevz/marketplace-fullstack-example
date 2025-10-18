@@ -12,21 +12,24 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @extends ServiceEntityRepository<CategoryEntity>
+ */
 class CategoryRepository extends ServiceEntityRepository implements ICategoryRepository
 {
-    public function remove(Category $domain)
+    public function __construct(ManagerRegistry $registry, private EntityManagerInterface $em)
+    {
+        parent::__construct($registry, CategoryEntity::class);
+    }
+
+    public function remove(Category $domain): void
     {
         // TODO: Check if id is present
         $this->em->remove(CategoryEntity::fromDomain($domain));
         $this->em->flush();
     }
 
-    public function __construct(ManagerRegistry $registry, private EntityManagerInterface $em)
-    {
-        parent::__construct($registry, CategoryEntity::class);
-    }
-
-    public function save(Category $domain)
+    public function save(Category $domain): void
     {
         $e = new CategoryEntity()->setName($domain->name);
 

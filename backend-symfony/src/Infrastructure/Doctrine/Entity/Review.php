@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Repository\ReviewRepository;
+use App\Infrastructure\Doctrine\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
@@ -35,9 +35,22 @@ class Review
         return $this->listing;
     }
 
-    public function getId(): ?int
+    public function setListing(Listing $listing): static
+    {
+        $this->listing = $listing;
+        return $this;
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getRating(): ?int

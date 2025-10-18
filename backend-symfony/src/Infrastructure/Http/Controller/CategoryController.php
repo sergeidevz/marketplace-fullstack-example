@@ -2,84 +2,75 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Infrastructure\Http\Controller;
 
-use App\Controller\DTO\CreateCategoryDTO;
-use App\Controller\DTO\UpdateCategoryDTO;
-use App\Entity\Category;
-use App\Repository\CategoryRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Application\DTO\CreateCategoryDTO;
+use App\Application\DTO\UpdateCategoryDTO;
+use App\Application\UseCase\Category\CreateCategory;
+use App\Application\UseCase\Category\GetAllCategories;
+use App\Application\UseCase\Category\GetCategoryById;
+use App\Application\UseCase\Category\RemoveCategory;
+use App\Application\UseCase\Category\UpdateCategory;
+use App\Domain\Category\CategoryNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/categories', format: 'json')]
 final class CategoryController extends AbstractController
 {
-    public function __construct(
-        private CategoryRepository $categoryRepository,
-        private EntityManagerInterface $entityManager,
-    ) {
-    }
-
     #[Route('/', methods: ['GET'])]
-    public function getAll(): JsonResponse
+    public function getAll(GetAllCategories $useCase): JsonResponse
     {
-        $categories = $this->categoryRepository->findAll();
+        $categories = $useCase->execute();
 
         return $this->json(compact('categories'));
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    public function getById(Uuid $id): JsonResponse
+    public function getById(string $id, GetCategoryById $useCase): JsonResponse
     {
-        $category = $this->categoryRepository->find($id);
-        if (!$category) {
-            throw $this->createNotFoundException();
-        }
+        try {
+            $category = $useCase->execute($id);
 
-        return $this->json(['category' => $category]);
+            return $this->json(['category' => $category]);
+        } catch (CategoryNotFoundException) {
+            // TODO: Create error handler
+            return $this->json(['message' => 'not found']);
+        }
     }
 
     #[Route('/', methods: ['POST'])]
-    public function create(#[MapRequestPayload] CreateCategoryDTO $dto): JsonResponse
+    public function create(#[MapRequestPayload] CreateCategoryDTO $dto, CreateCategory $useCase): JsonResponse
     {
-        $category = new Category()->setName($dto->name);
+        $useCase->execute($dto);
 
-        $this->entityManager->persist($category);
-        $this->entityManager->flush();
-
-        return $this->json(['category' => $category]);
+        return $this->json(['message' => 'success']);
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(Uuid $id, #[MapRequestPayload] UpdateCategoryDTO $dto): JsonResponse
+    public function update(string $id, #[MapRequestPayload] UpdateCategoryDTO $dto, UpdateCategory $useCase): JsonResponse
     {
-        $foundCategory = $this->categoryRepository->find($id);
-        if (!$foundCategory) {
-            throw $this->createNotFoundException();
+        try {
+            $useCase->execute($id, $dto);
+
+            return $this->json(['message' => 'success']);
+        } catch (NotFoundHttpException) {
+            return $this->json(['message' => 'not found']);
         }
-
-        $foundCategory->setName($dto->name);
-        $this->entityManager->persist($foundCategory);
-        $this->entityManager->flush();
-
-        return $this->json(['category' => $foundCategory]);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
-    public function delete(string $id): JsonResponse
+    public function delete(string $id, RemoveCategory $useCase): JsonResponse
     {
-        $category = $this->categoryRepository->find($id);
-        if (!$category) {
-            throw $this->createNotFoundException();
+        try {
+            $useCase->execute($id);
+
+            return $this->json(['message' => 'success']);
+        } catch (CategoryNotFoundException) {
+            return $this->json(['message' => 'not found']);
         }
-
-        $this->entityManager->remove($category);
-        $this->entityManager->flush();
-
-        return $this->json(['message' => 'success']);
     }
 }

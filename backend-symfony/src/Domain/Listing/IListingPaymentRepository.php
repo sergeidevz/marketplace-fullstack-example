@@ -6,7 +6,7 @@ namespace App\Domain;
 
 interface IListingPaymentRepository
 {
-    public function save(ListingPayment $domain);
+    public function save(ListingPayment $domain): void;
 
     /**
      * @return ListingPayment[]
@@ -17,5 +17,5 @@ interface IListingPaymentRepository
 
     public function findByListingId(string $id): ?ListingPayment;
 
-    public function remove(string $id);
+    public function remove(string $id): void;
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Domain\Category as CategoryDomain;
-use App\Repository\CategoryRepository;
+use App\Infrastructure\Doctrine\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,9 +41,23 @@ class Category
 
     public function toDomain(): CategoryDomain
     {
+        $id = $this->id;
+        $domainId = null;
+
+        if (null !== $id) {
+            $domainId = $id->toRfc4122();
+        }
+
+        $name = $this->name;
+
+        // TODO: Find a better way
+        if (null === $name) {
+            throw new \DomainException('Name should be defined');
+        }
+
         return new CategoryDomain(
-            id : $this->id->toRfc4122(),
-            name : $this->name,
+            id : $domainId,
+            name : $name,
         );
     }
 
@@ -65,7 +79,7 @@ class Category
         return $this->id;
     }
 
-    public function setId(Uuid $id)
+    public function setId(Uuid $id): static
     {
         $this->id = $id;
 

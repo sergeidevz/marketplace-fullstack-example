@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain;
+namespace App\Domain\Listing;
+
+use App\Domain\Category\Category;
+use App\Domain\User\User;
 
 final class Listing
 {

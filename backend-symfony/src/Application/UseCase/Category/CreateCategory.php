@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Category;
 
 use App\Application\DTO\CreateCategoryDTO;
-use App\Domain\Category;
+use App\Domain\Category\Category;
 use App\Domain\Category\CategoryService;
 
 final class CreateCategory

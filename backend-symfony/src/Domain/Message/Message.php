@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain;
+namespace App\Domain\Message;
+
+use App\Domain\User\User;
 
 final class Message
 {

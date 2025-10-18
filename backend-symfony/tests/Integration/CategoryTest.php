@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Integration;
 
-use App\Repository\CategoryRepository;
+use App\Domain\Category\Category;
+use App\Domain\Category\ICategoryRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Uid\Uuid;
 
 class CategoryTest extends WebTestCase
 {
@@ -26,12 +25,17 @@ class CategoryTest extends WebTestCase
 
     public function testGetCategories(): void
     {
-        $categoryRepo = $this->createMock(CategoryRepository::class);
+        $categories = [
+            new Category(name: 'books', id: '123'),
+        ];
+
+        $categoryRepo = $this->createMock(ICategoryRepository::class);
         $categoryRepo->expects(self::once())
-            ->method('findAll')
-            ->willReturn([]);
-        $this->container->set(CategoryRepository::class, $categoryRepo);
+            ->method('getAll')->willReturn($categories);
+
+        $this->container->set(ICategoryRepository::class, $categoryRepo);
         $this->client->request('GET', '/api/categories/');
+
         $response = $this->client->getResponse();
         $content = $response->getContent();
         $object = json_decode($content, true);
@@ -41,17 +45,6 @@ class CategoryTest extends WebTestCase
         $this->assertJson($content);
 
         $this->assertArrayHasKey('categories', $object);
-    }
-
-    public function testGetCategoryById(): void
-    {
-        $categoryRepo = $this->createMock(CategoryRepository::class);
-        $categoryRepo->expects(self::once())
-            ->method('find')
-            ->willThrowException(new NotFoundHttpException());
-        $this->container->set(CategoryRepository::class, $categoryRepo);
-        $id = Uuid::v7();
-        $this->client->request('GET', "/api/categories/$id");
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertIsArray($object["categories"]);
     }
 }

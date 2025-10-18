@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain;
+namespace App\Domain\Review;
+
+use App\Domain\Listing\Listing;
+use App\Domain\User\User;
 
 final class Review
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Domain\Category as CategoryDomain;
+use App\Domain\Category\Category as CategoryDomain;
 use App\Infrastructure\Doctrine\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

@@ -4,47 +4,84 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Domain\Category\Category;
+use App\Domain\Category\CategoryFactory;
 use App\Domain\Category\ICategoryRepository;
+use Faker\Factory;
+use Faker\Generator;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
+
+use function PHPUnit\Framework\assertNotNull;
 
 class CategoryTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private Container $container;
+    private Generator $faker;
+    private ICategoryRepository $categoryRepository;
+    private string $path = '/api/categories/';
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->faker = Factory::create();
         $this->client = static::createClient();
-        $this->container = static::getContainer();
+        $this->categoryRepository = static::getContainer()->get(ICategoryRepository::class);
     }
 
-    public function testGetCategories(): void
+    // Populate database with data
+    // Send request
+    // Assert result
+
+    public function testGetCategories()
     {
-        $categories = [
-            new Category(name: 'books', id: '123'),
-        ];
+        // Arrange
+        $name = $this->faker->colorName();
 
-        $categoryRepo = $this->createMock(ICategoryRepository::class);
-        $categoryRepo->expects(self::once())
-            ->method('getAll')->willReturn($categories);
+        $category1 = CategoryFactory::create($name);
+        $category2 = CategoryFactory::create($name);
+        $category3 = CategoryFactory::create($name);
 
-        $this->container->set(ICategoryRepository::class, $categoryRepo);
-        $this->client->request('GET', '/api/categories/');
+        $this->categoryRepository->save($category1);
+        $this->categoryRepository->save($category2);
+        $this->categoryRepository->save($category3);
+
+        // Act
+        $this->client->request(Request::METHOD_GET, $this->path);
 
         $response = $this->client->getResponse();
         $content = $response->getContent();
-        $object = json_decode($content, true);
+        $json = json_decode($content, true);
 
-        $this->assertResponseIsSuccessful();
+        // Assert
+        $actual = count($json['categories']);
+        $expected = 3;
+        // TODO: Assert schema
+
+        $this->assertEquals($actual, $expected);
         $this->assertResponseStatusCodeSame(200);
-        $this->assertJson($content);
+    }
 
-        $this->assertArrayHasKey('categories', $object);
-        $this->assertIsArray($object['categories']);
+    public function testGetCategoryByIdSuccess()
+    {
+        // Arrange
+        $name = $this->faker->colorName();
+
+        $category = CategoryFactory::create($name);
+
+        $id = $this->categoryRepository->save($category);
+        assertNotNull($id);
+
+        // Act
+        $this->client->request(Request::METHOD_GET, $this->path.$id);
+
+        $response = $this->client->getResponse();
+        $content = $response->getContent();
+        $json = json_decode($content, true);
+
+        // Assert
+        $this->assertResponseStatusCodeSame(200);
+        assertNotNull($json['category']);
     }
 }

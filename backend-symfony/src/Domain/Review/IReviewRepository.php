@@ -6,14 +6,14 @@ namespace App\Domain\Review;
 
 interface IReviewRepository
 {
-    public function save(Review $domain): void;
+    public function save(Review $domain): string;
 
     /**
      * @return Review[]
      */
-    public function findAll(): array;
+    public function getAll(): array;
 
-    public function findById(string $id): ?Review;
+    public function getById(string $id): Review;
 
     public function remove(Review $domain): void;
 }

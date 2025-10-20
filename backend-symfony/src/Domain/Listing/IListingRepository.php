@@ -6,14 +6,14 @@ namespace App\Domain\Listing;
 
 interface IListingRepository
 {
-    public function save(Listing $domain): void;
+    public function save(Listing $domain): string;
 
     /**
      * @return Listing[]
      */
-    public function findAll(): array;
+    public function getAll(): array;
 
-    public function findById(string $id): ?Listing;
+    public function getById(string $id): Listing;
 
     public function remove(Listing $domain): void;
 }

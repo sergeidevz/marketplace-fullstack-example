@@ -8,18 +8,18 @@ use App\Domain\Listing\Listing;
 
 interface IUserRepository
 {
-    public function save(Listing $domain): void;
+    public function save(Listing $domain): string;
 
     /**
      * @return User[]
      */
     public function findAll(): array;
 
-    public function findById(string $id): ?User;
+    public function getById(string $id): User;
 
-    public function findByEmail(string $email): ?User;
+    public function getByEmail(string $email): User;
 
-    public function findByDisplayName(string $displayName): ?User;
+    public function getByDisplayName(string $displayName): User;
 
     public function remove(User $domain): void;
 }

@@ -18,7 +18,6 @@ final class UpdateCategory
 
     public function execute(string $id, UpdateCategoryDTO $dto): void
     {
-
         $foundCategory = $this->categoryService->findById($id);
 
         if (null === $foundCategory) {
@@ -28,8 +27,8 @@ final class UpdateCategory
         $name = $foundCategory->name;
 
         // TODO: Find a better way.
-        if ($dto->name !== null) {
-          $name = $dto->name;
+        if (null !== $dto->name) {
+            $name = $dto->name;
         }
 
         $category = new Category(

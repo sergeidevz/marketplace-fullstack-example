@@ -54,11 +54,12 @@ class User
         return $this->id;
     }
 
-    public function setId(Uuid $id): static {
-       $this->id = $id;
-       return $this;
-    }
+    public function setId(Uuid $id): static
+    {
+        $this->id = $id;
 
+        return $this;
+    }
 
     public function getName(): ?string
     {

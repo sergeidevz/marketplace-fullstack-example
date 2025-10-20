@@ -38,6 +38,7 @@ class Review
     public function setListing(Listing $listing): static
     {
         $this->listing = $listing;
+
         return $this;
     }
 

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Category;
 
-use App\Domain\Category\Category;
-use App\Domain\Category\ICategoryRepository;
-
 final class CategoryService
 {
     public function __construct(

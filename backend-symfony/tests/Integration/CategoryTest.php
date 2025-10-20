@@ -45,6 +45,6 @@ class CategoryTest extends WebTestCase
         $this->assertJson($content);
 
         $this->assertArrayHasKey('categories', $object);
-        $this->assertIsArray($object["categories"]);
+        $this->assertIsArray($object['categories']);
     }
 }

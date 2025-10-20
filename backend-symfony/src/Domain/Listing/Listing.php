@@ -18,7 +18,7 @@ final class Listing
         public readonly string $currency,
         public readonly string $location,
         public readonly ListingStatus $status,
-        public readonly User $author
+        public readonly User $author,
     ) {
         if (empty($title)) {
             throw new \DomainException('Title should not be empty');

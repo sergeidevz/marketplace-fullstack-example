@@ -10,7 +10,7 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $category = new Category()->setName("books");
+        $category = new Category()->setName('books');
         $manager->persist($category);
         $manager->flush();
     }

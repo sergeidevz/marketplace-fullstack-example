@@ -20,7 +20,7 @@ final class GetCategoryById
         $domain = $this->categoryService->findById($id);
 
         if (null === $domain) {
-           throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException();
         }
 
         return CategoryDTO::fromDomain($domain);

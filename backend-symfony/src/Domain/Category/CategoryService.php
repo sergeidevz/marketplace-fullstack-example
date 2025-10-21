@@ -11,14 +11,16 @@ final class CategoryService
     ) {
     }
 
-    public function create(Category $domain): void
+    public function create(Category $domain): string
     {
-        $this->categoryRepository->save($domain);
+        $id = $this->categoryRepository->save($domain);
+        return $id;
     }
 
-    public function update(Category $domain): void
+    public function update(Category $domain): string
     {
-        $this->categoryRepository->save($domain);
+        $id = $this->categoryRepository->save($domain);
+        return $id;
     }
 
     public function remove(Category $domain): void
@@ -34,8 +36,8 @@ final class CategoryService
         return $this->categoryRepository->getAll();
     }
 
-    public function findById(string $id): ?Category
+    public function getById(string $id): Category
     {
-        return $this->categoryRepository->findById($id);
+        return $this->categoryRepository->getById($id);
     }
 }

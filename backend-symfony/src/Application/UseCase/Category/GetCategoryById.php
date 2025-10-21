@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Category;
 
 use App\Application\DTO\CategoryDTO;
-use App\Domain\Category\CategoryNotFoundException;
 use App\Domain\Category\CategoryService;
 
 final class GetCategoryById
@@ -17,11 +16,8 @@ final class GetCategoryById
 
     public function execute(string $id): CategoryDTO
     {
-        $domain = $this->categoryService->findById($id);
-
-        if (null === $domain) {
-            throw new CategoryNotFoundException();
-        }
+        // TODO: Should I rethrow here?
+        $domain = $this->categoryService->getById($id);
 
         return CategoryDTO::fromDomain($domain);
     }

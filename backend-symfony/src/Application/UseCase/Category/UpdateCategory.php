@@ -16,9 +16,9 @@ final class UpdateCategory
     ) {
     }
 
-    public function execute(string $id, UpdateCategoryDTO $dto): void
+    public function execute(string $id, UpdateCategoryDTO $dto): string
     {
-        $foundCategory = $this->categoryService->findById($id);
+        $foundCategory = $this->categoryService->getById($id);
 
         if (null === $foundCategory) {
             throw new CategoryNotFoundException();
@@ -31,11 +31,13 @@ final class UpdateCategory
             $name = $dto->name;
         }
 
+
         $category = new Category(
             name: $name,
             id: $id
         );
 
-        $this->categoryService->update($category);
+        $id = $this->categoryService->update($category);
+        return $id;
     }
 }

@@ -6,11 +6,11 @@ namespace App\Infrastructure\Doctrine\Repository;
 
 use App\Domain\Category\Category;
 use App\Domain\Category\ICategoryRepository;
+use App\Domain\Shared\NotFoundException;
 use App\Infrastructure\Doctrine\Entity\Category as CategoryEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<CategoryEntity>
@@ -24,33 +24,41 @@ class CategoryRepository extends ServiceEntityRepository implements ICategoryRep
 
     public function remove(Category $domain): void
     {
-        // TODO: Check if id is present
-        $this->em->remove(CategoryEntity::fromDomain($domain));
+        // OPTIMIZE:
+        $entity = $this->find($domain->id);
+        $this->em->remove($entity);
         $this->em->flush();
     }
 
-    public function save(Category $domain): void
+    public function save(Category $domain): string
     {
-        $e = new CategoryEntity()->setName($domain->name);
+        if ($domain->id) {
+            $e = $this->find($domain->id);
+        } else {
+            $e = new CategoryEntity();
+        }
 
-        if (null !== $domain->id) {
-            $e->setId(Uuid::fromString($domain->id));
+        if ($domain->name) {
+            $e->setName($domain->name);
         }
 
         $this->em->persist($e);
         $this->em->flush();
+
+        $id = $e->getId();
+        $str_id = $id->toRfc4122();
+
+        return $str_id;
     }
 
-    public function findById(string $id): ?Category
+    public function getById(string $id): Category
     {
         /**
          * @var ?CategoryEntity $entity
          */
         $entity = $this->find($id);
 
-        if (null === $entity) {
-            return null;
-        }
+        NotFoundException::throwIfNull($entity);
 
         return $entity->toDomain();
     }

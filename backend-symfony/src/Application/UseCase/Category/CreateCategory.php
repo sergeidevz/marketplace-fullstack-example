@@ -15,12 +15,13 @@ final class CreateCategory
     ) {
     }
 
-    public function execute(CreateCategoryDTO $dto): void
+    public function execute(CreateCategoryDTO $dto): string
     {
         $category = new Category(
             name: $dto->name
         );
 
-        $this->categoryService->create($category);
+        $id = $this->categoryService->create($category);
+        return $id;
     }
 }

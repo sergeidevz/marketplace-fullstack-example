@@ -14,6 +14,7 @@ use App\Application\UseCase\Category\UpdateCategory;
 use App\Domain\Category\CategoryNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -45,20 +46,21 @@ final class CategoryController extends AbstractController
     #[Route('/', methods: ['POST'])]
     public function create(#[MapRequestPayload] CreateCategoryDTO $dto, CreateCategory $useCase): JsonResponse
     {
-        $useCase->execute($dto);
+        $id = $useCase->execute($dto);
 
-        return $this->json(['message' => 'success']);
+        return $this->json(['id' => $id], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'])]
     public function update(string $id, #[MapRequestPayload] UpdateCategoryDTO $dto, UpdateCategory $useCase): JsonResponse
     {
         try {
-            $useCase->execute($id, $dto);
+            $id = $useCase->execute($id, $dto);
 
-            return $this->json(['message' => 'success']);
+            return $this->json(['id' => $id], 200);
         } catch (NotFoundHttpException) {
-            return $this->json(['message' => 'not found']);
+            return $this->json(['message' => 'not found'],
+                Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -70,7 +72,8 @@ final class CategoryController extends AbstractController
 
             return $this->json(['message' => 'success']);
         } catch (CategoryNotFoundException) {
-            return $this->json(['message' => 'not found']);
+            return $this->json(['message' => 'not found'],
+                Response::HTTP_NOT_FOUND);
         }
     }
 }

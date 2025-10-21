@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Category;
 
-use App\Domain\Category\CategoryNotFoundException;
 use App\Domain\Category\CategoryService;
 
 final class RemoveCategory
@@ -16,11 +15,7 @@ final class RemoveCategory
 
     public function execute(string $id): void
     {
-        $foundCategory = $this->categoryService->findById($id);
-
-        if (null === $foundCategory) {
-            throw new CategoryNotFoundException();
-        }
+        $foundCategory = $this->categoryService->getById($id);
 
         $this->categoryService->remove($foundCategory);
     }

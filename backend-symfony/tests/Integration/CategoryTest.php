@@ -13,8 +13,6 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-use function PHPUnit\Framework\assertNotNull;
-
 class CategoryTest extends WebTestCase
 {
     private KernelBrowser $client;
@@ -128,7 +126,7 @@ class CategoryTest extends WebTestCase
         $category = CategoryFactory::create($name);
 
         $id = $this->categoryRepository->save($category);
-        assertNotNull($id);
+        $this->assertNotNull($id);
 
         // Act
         $this->client->request(Request::METHOD_GET, $this->path.$id);
@@ -139,7 +137,7 @@ class CategoryTest extends WebTestCase
 
         // Assert
         $this->assertResponseStatusCodeSame(200);
-        assertNotNull($json['category']);
+        $this->assertNotNull($json['category']);
     }
 
     public function testDeleteCategory()

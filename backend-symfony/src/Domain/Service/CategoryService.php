@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Category;
+namespace App\Domain\Service;
+
+use App\Domain\Entity\Category;
+use App\Domain\RepositoryInterface\ICategoryRepository;
 
 final class CategoryService
 {
@@ -11,15 +14,15 @@ final class CategoryService
     ) {
     }
 
-    public function create(Category $domain): string
+    public function create(Category $domain): int
     {
-        $id = $this->categoryRepository->save($domain);
+        $id = $this->categoryRepository->create($domain);
         return $id;
     }
 
-    public function update(Category $domain): string
+    public function update(Category $domain): int
     {
-        $id = $this->categoryRepository->save($domain);
+        $id = $this->categoryRepository->update($domain);
         return $id;
     }
 
@@ -36,7 +39,7 @@ final class CategoryService
         return $this->categoryRepository->getAll();
     }
 
-    public function getById(string $id): Category
+    public function getById(int $id): Category
     {
         return $this->categoryRepository->getById($id);
     }

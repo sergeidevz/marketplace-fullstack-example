@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Listing;
+namespace App\Domain\Enum;
 
 enum ListingStatus: string
 {

@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Listing;
+namespace App\Domain\RepositoryInterface;
+
+use App\Domain\Entity\Listing;
 
 interface IListingRepository
 {
-    public function save(Listing $domain): string;
+    public function create(Listing $domain): int;
+
+    public function update(Listing $domain): int;
 
     /**
      * @return Listing[]

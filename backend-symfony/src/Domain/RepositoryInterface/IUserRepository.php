@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\User;
+namespace App\Domain\RepositoryInterface;
 
-use App\Domain\Listing\Listing;
+use App\Domain\Entity\User;
 
 interface IUserRepository
 {
-    public function save(Listing $domain): string;
+    public function create(User $domain): int;
+
+    public function update(User $domain): int;
 
     /**
      * @return User[]
      */
-    public function findAll(): array;
+    public function getAll(): array;
 
-    public function getById(string $id): User;
+    public function getById(int $id): User;
 
     public function getByEmail(string $email): User;
 

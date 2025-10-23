@@ -6,7 +6,6 @@ namespace App\Application\UseCase\Category;
 
 use App\Application\DTO\UpdateCategoryDTO;
 use App\Domain\Category\Category;
-use App\Domain\Category\CategoryNotFoundException;
 use App\Domain\Category\CategoryService;
 
 final class UpdateCategory
@@ -19,10 +18,6 @@ final class UpdateCategory
     public function execute(string $id, UpdateCategoryDTO $dto): string
     {
         $foundCategory = $this->categoryService->getById($id);
-
-        if (null === $foundCategory) {
-            throw new CategoryNotFoundException();
-        }
 
         $name = $foundCategory->name;
 

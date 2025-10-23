@@ -16,7 +16,6 @@ final class GetCategoryById
 
     public function execute(string $id): CategoryDTO
     {
-        // TODO: Should I rethrow here?
         $domain = $this->categoryService->getById($id);
 
         return CategoryDTO::fromDomain($domain);

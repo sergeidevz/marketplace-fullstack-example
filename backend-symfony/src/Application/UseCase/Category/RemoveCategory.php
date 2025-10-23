@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Category;
 
-use App\Domain\Category\CategoryService;
+use App\Domain\Service\CategoryService;
 
 final class RemoveCategory
 {
@@ -13,7 +13,7 @@ final class RemoveCategory
     ) {
     }
 
-    public function execute(string $id): void
+    public function execute(int $id): void
     {
         $foundCategory = $this->categoryService->getById($id);
 

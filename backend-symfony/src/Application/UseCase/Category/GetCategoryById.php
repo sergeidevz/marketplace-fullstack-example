@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Category;
 
 use App\Application\DTO\CategoryDTO;
-use App\Domain\Category\CategoryService;
+use App\Domain\Service\CategoryService;
 
 final class GetCategoryById
 {
@@ -14,7 +14,7 @@ final class GetCategoryById
     ) {
     }
 
-    public function execute(string $id): CategoryDTO
+    public function execute(int $id): CategoryDTO
     {
         $domain = $this->categoryService->getById($id);
 

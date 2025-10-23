@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Application\DTO;
 
-use App\Domain\Category\Category;
+use App\Domain\Entity\Category;
 
 final class CategoryDTO
 {
     public function __construct(
         public readonly string $name,
-        public readonly string $id,
+        public readonly int $id,
     ) {
     }
 
     public static function fromDomain(Category $domain): self
     {
-        $id = $domain->id;
+        $id = $domain->getId();
 
         if (!$id) {
             throw new \DomainException('Id should not be null');
@@ -24,7 +24,7 @@ final class CategoryDTO
 
         return new self(
             id: $id,
-            name: $domain->name,
+            name: $domain->getName(),
         );
     }
 }

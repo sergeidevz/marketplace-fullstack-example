@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Category;
 
 use App\Application\DTO\UpdateCategoryDTO;
-use App\Domain\Category\Category;
-use App\Domain\Category\CategoryService;
+use App\Domain\Service\CategoryService;
 
 final class UpdateCategory
 {
@@ -15,24 +14,17 @@ final class UpdateCategory
     ) {
     }
 
-    public function execute(string $id, UpdateCategoryDTO $dto): string
+    public function execute(int $id, UpdateCategoryDTO $dto): int
     {
         $foundCategory = $this->categoryService->getById($id);
 
-        $name = $foundCategory->name;
-
         // TODO: Find a better way.
         if (null !== $dto->name) {
-            $name = $dto->name;
+            $foundCategory = $dto->name;
         }
 
+        $id = $this->categoryService->update($foundCategory);
 
-        $category = new Category(
-            name: $name,
-            id: $id
-        );
-
-        $id = $this->categoryService->update($category);
         return $id;
     }
 }

@@ -30,7 +30,7 @@ final class ListingController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    public function getById(string $id, GetListingById $useCase): JsonResponse
+    public function getById(int $id, GetListingById $useCase): JsonResponse
     {
         try {
             $listing = $useCase->execute($id);
@@ -51,7 +51,7 @@ final class ListingController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(string $id, #[MapRequestPayload] UpdateListingDTO $dto, UpdateListing $useCase): JsonResponse
+    public function update(int $id, #[MapRequestPayload] UpdateListingDTO $dto, UpdateListing $useCase): JsonResponse
     {
         try {
             $id = $useCase->execute($id, $dto);
@@ -64,7 +64,7 @@ final class ListingController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
-    public function delete(string $id, RemoveListing $useCase): JsonResponse
+    public function delete(int $id, RemoveListing $useCase): JsonResponse
     {
         try {
             $useCase->execute($id);

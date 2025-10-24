@@ -13,7 +13,7 @@ final class RemoveListing
     ) {
     }
 
-    public function execute(string $id): void
+    public function execute(int $id): void
     {
         $foundListing = $this->listingService->getById($id);
 

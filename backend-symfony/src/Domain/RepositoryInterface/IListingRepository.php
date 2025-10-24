@@ -17,7 +17,7 @@ interface IListingRepository
      */
     public function getAll(): array;
 
-    public function getById(string $id): Listing;
+    public function getById(int $id): Listing;
 
     public function remove(Listing $domain): void;
 }

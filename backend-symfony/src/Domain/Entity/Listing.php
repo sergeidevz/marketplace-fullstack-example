@@ -26,7 +26,7 @@ class Listing
     #[Column]
     private string $description;
 
-    #[ManyToOne(targetEntity: Category::class, inversedBy: 'listings')]
+    #[ManyToOne(targetEntity: Category::class, inversedBy: 'listings', cascade: ['persist'])]
     private Category $category;
 
     #[Column]
@@ -41,7 +41,7 @@ class Listing
     #[Column]
     private string $status;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'listings')]
+    #[ManyToOne(targetEntity: User::class, inversedBy: 'listings', cascade: ['persist'])]
     private User $author;
 
     public function __construct(

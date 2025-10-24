@@ -2,26 +2,19 @@
 
 namespace App\Application\DTO;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
 final class UpdateListingDTO
 {
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 5, max: 10)]
-    public ?string $title;
+    public ?string $title = null;
 
-    #[Assert\Range(min: 3)]
-    public ?int $price;
+    public ?int $price = null;
 
-    public ?string $description;
+    public ?string $description = null;
 
-    public ?int $categoryId;
+    public ?int $categoryId = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 4)]
-    public ?string $currency;
+    public ?string $currency = null;
 
-    public ?string $location;
+    public ?string $location = null;
 
-    public ?string $status;
+    public ?string $status = null;
 }

@@ -11,7 +11,7 @@ use App\Application\UseCase\Category\GetAllCategories;
 use App\Application\UseCase\Category\GetCategoryById;
 use App\Application\UseCase\Category\RemoveCategory;
 use App\Application\UseCase\Category\UpdateCategory;
-use App\Domain\Category\CategoryNotFoundException;
+use App\Domain\Shared\NotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,13 +31,13 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    public function getById(string $id, GetCategoryById $useCase): JsonResponse
+    public function getById(int $id, GetCategoryById $useCase): JsonResponse
     {
         try {
             $category = $useCase->execute($id);
 
             return $this->json(['category' => $category]);
-        } catch (CategoryNotFoundException) {
+        } catch (NotFoundException) {
             // TODO: Create error handler
             return $this->json(['message' => 'not found']);
         }
@@ -52,7 +52,7 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(string $id, #[MapRequestPayload] UpdateCategoryDTO $dto, UpdateCategory $useCase): JsonResponse
+    public function update(int $id, #[MapRequestPayload] UpdateCategoryDTO $dto, UpdateCategory $useCase): JsonResponse
     {
         try {
             $id = $useCase->execute($id, $dto);
@@ -65,13 +65,13 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
-    public function delete(string $id, RemoveCategory $useCase): JsonResponse
+    public function delete(int $id, RemoveCategory $useCase): JsonResponse
     {
         try {
             $useCase->execute($id);
 
             return $this->json(['message' => 'success']);
-        } catch (CategoryNotFoundException) {
+        } catch (NotFoundException) {
             return $this->json(['message' => 'not found'],
                 Response::HTTP_NOT_FOUND);
         }

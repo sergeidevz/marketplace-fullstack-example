@@ -17,12 +17,14 @@ final class CategoryService
     public function create(Category $domain): int
     {
         $id = $this->categoryRepository->create($domain);
+
         return $id;
     }
 
     public function update(Category $domain): int
     {
         $id = $this->categoryRepository->update($domain);
+
         return $id;
     }
 

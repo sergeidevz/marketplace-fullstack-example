@@ -39,7 +39,7 @@ final class ListingService
         return $this->listingRepository->getAll();
     }
 
-    public function getById(string $id): Listing
+    public function getById(int $id): Listing
     {
         return $this->listingRepository->getById($id);
     }

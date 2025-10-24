@@ -4,74 +4,92 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
-use App\Domain\RepositoryInterface\IListingRepository;
 use App\Domain\Entity\Listing;
+use App\Domain\RepositoryInterface\IListingRepository;
 use App\Domain\Shared\NotFoundException;
-use App\Infrastructure\Doctrine\Entity\Listing as EntityListing;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NoResultException;
 
-/**
- * @extends ServiceEntityRepository<Listing>
- */
-class ListingRepository extends ServiceEntityRepository implements IListingRepository
+class ListingRepository implements IListingRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, EntityListing::class);
+    public function __construct(
+        private EntityManagerInterface $em,
+    ) {
     }
 
     public function remove(Listing $domain): void
     {
-        $entity = $this->find($domain->getId());
-        if (null === $entity) {
-            throw new NotFoundException('Listing not found');
-        }
-        $this->getEntityManager()->remove($entity);
-        $this->getEntityManager()->flush();
+        $qb = $this->em->createQueryBuilder();
+        $q = $qb->delete(Listing::class, 'l')
+            ->where('l.id = :id')
+            ->setParameter('id', $domain->getId())
+            ->getQuery();
+
+        $q->execute();
     }
 
-    public function save(Listing $domain): string
+    public function update(Listing $domain): int
     {
-        if ($domain->getId()) {
-            $e = $this->find($domain->getId());
+        $qb = $this->em->createQueryBuilder();
+        $qb->update(Listing::class, 'l')
+            ->set('l.title', ':title')
+            ->set('l.description', ':description')
+            ->set('l.price', ':price')
+            ->set('l.currency', ':currency')
+            ->set('l.location', ':location')
+            ->set('l.status', ':status')
+            ->set('l.category', ':category')
+            ->where('l.id = :id')
+            ->setParameter('id', $domain->getId())
+            ->setParameter('title', $domain->getTitle())
+            ->setParameter('description', $domain->getDescription())
+            ->setParameter('price', $domain->getPrice())
+            ->setParameter('currency', $domain->getCurrency())
+            ->setParameter('location', $domain->getLocation())
+            ->setParameter('status', $domain->getStatus())
+            ->setParameter('category', $domain->getCategory())
+            ->getQuery()
+            ->execute();
 
-            if (null === $e) {
-                throw new NotFoundException('Listing not found');
-            }
-        } else {
-            $e = EntityListing::fromDomain($domain);
-        }
-
-        $this->getEntityManager()->persist($e);
-        $this->getEntityManager()->flush();
-
-        $id = $e->getId();
-        $str_id = $id->toRfc4122();
-
-        return $str_id;
+        return $domain->getId();
     }
 
-    public function getById(string $id): Listing
+    public function create(Listing $domain): int
     {
-        /**
-         * @var ?EntityListing $entity
-         */
-        $entity = $this->find($id);
+        $this->em->persist($domain);
+        $this->em->flush();
 
-        NotFoundException::throwIfNull($entity);
+        return $domain->getId();
+    }
 
-        return $entity->toDomain();
+    public function getById(int $id): Listing
+    {
+        $qb = $this->em->createQueryBuilder();
+        $q = $qb
+            ->select('l')
+            ->from(Listing::class, 'l')
+            ->where('l.id = :id')
+            ->setParameter('id', $id, ParameterType::INTEGER)
+            ->getQuery();
+
+        try {
+            $listing = $q->getSingleResult();
+        } catch (NoResultException) {
+            throw new NotFoundException("Listing $id not found");
+        }
+
+        return $listing;
     }
 
     public function getAll(): array
     {
-        /**
-         * @var EntityListing[]
-         */
-        $entities = parent::findAll();
-        $domains = array_map(fn (EntityListing $e) => $e->toDomain(), $entities);
+        $qb = $this->em->createQueryBuilder();
+        $categories = $qb->select('l')
+            ->from(Listing::class, 'l')
+            ->getQuery()
+            ->getResult();
 
-        return $domains;
+        return $categories;
     }
 }

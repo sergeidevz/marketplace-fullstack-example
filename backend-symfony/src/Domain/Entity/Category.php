@@ -25,7 +25,11 @@ class Category
     #[Column]
     private string $name;
 
-    #[OneToMany(targetEntity: Listing::class, mappedBy: 'categories')]
+    #[OneToMany(
+        targetEntity: Listing::class,
+        mappedBy: 'categories',
+        cascade: ['persist']
+    )]
     private Collection $listings;
 
     public function __construct()

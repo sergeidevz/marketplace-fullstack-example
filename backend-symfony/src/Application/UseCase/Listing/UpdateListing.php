@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Listing;
 
 use App\Application\DTO\UpdateListingDTO;
-use App\Domain\Factory\ListingFactory;
 use App\Domain\Service\CategoryService;
 use App\Domain\Service\ListingService;
 
@@ -17,29 +16,29 @@ final class UpdateListing
     ) {
     }
 
-    public function execute(string $id, UpdateListingDTO $dto): string
+    public function execute(int $id, UpdateListingDTO $dto): int
     {
         $foundListing = $this->listingService->getById($id);
 
-        if ($dto->title) {
+        if ($dto->title !== null) {
             $foundListing->setTitle($dto->title);
         }
-        if ($dto->price) {
+        if ($dto->price !== null) {
             $foundListing->setPrice($dto->price);
         }
-        if ($dto->description) {
+        if ($dto->description !== null) {
             $foundListing->setDescription($dto->description);
         }
-        if ($dto->currency) {
+        if ($dto->currency !== null) {
             $foundListing->setCurrency($dto->currency);
         }
-        if ($dto->location) {
+        if ($dto->location !== null) {
             $foundListing->setLocation($dto->location);
         }
-        if ($dto->status) {
+        if ($dto->status !== null) {
             $foundListing->setStatus($dto->status);
         }
-        if ($dto->categoryId) {
+        if ($dto->categoryId !== null) {
             $category = $this->categoryService->getById($dto->categoryId);
             $foundListing->setCategory($category);
         }

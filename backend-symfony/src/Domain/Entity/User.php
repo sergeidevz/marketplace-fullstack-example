@@ -40,7 +40,11 @@ class User
     #[Column]
     private string $language;
 
-    #[OneToMany(targetEntity: Listing::class, mappedBy: 'author')]
+    #[OneToMany(
+        targetEntity: Listing::class,
+        mappedBy: 'author',
+        cascade: ['persist']
+    )]
     private Collection $listings;
 
     public function __construct()

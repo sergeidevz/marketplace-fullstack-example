@@ -18,9 +18,8 @@ final class UpdateCategory
     {
         $foundCategory = $this->categoryService->getById($id);
 
-        // TODO: Find a better way.
         if (null !== $dto->name) {
-            $foundCategory = $dto->name;
+            $foundCategory->setName($dto->name);
         }
 
         $id = $this->categoryService->update($foundCategory);

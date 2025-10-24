@@ -8,37 +8,35 @@ use App\Domain\Entity\Category;
 use App\Domain\RepositoryInterface\ICategoryRepository;
 use App\Domain\Shared\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\NoResultException;
 
 class CategoryRepository implements ICategoryRepository
 {
-    private QueryBuilder $qb;
-
     public function __construct(
-        private EntityManagerInterface $em,
+        private readonly EntityManagerInterface $em,
     ) {
-        $this->qb = $em->createQueryBuilder();
     }
 
     public function remove(Category $domain): void
     {
-        $q = $this->qb->delete(Category::class, 'c')
+        $qb = $this->em->createQueryBuilder();
+        $qb->delete(Category::class, 'c')
             ->where('c.id = :id')
             ->setParameter('id', $domain->getId())
-            ->getQuery();
-
-        $q->getResult();
+            ->getQuery()
+            ->execute();
     }
 
     public function update(Category $domain): int
     {
-        $this->qb->update(Category::class, 'c')
+        $qb = $this->em->createQueryBuilder();
+        $qb->update(Category::class, 'c')
             ->set('c.name', ':name')
             ->where('c.id = :id')
-            ->setParameter('id', $domain->getId())
             ->setParameter('name', $domain->getName())
+            ->setParameter('id', $domain->getId())
             ->getQuery()
-            ->getResult();
+            ->execute();
 
         return $domain->getId();
     }
@@ -53,22 +51,28 @@ class CategoryRepository implements ICategoryRepository
 
     public function getById(int $id): Category
     {
-        $category = $this->qb
+        $qb = $this->em->createQueryBuilder();
+        $q = $qb
             ->select('c')
             ->from(Category::class, 'c')
-            ->where('id = :id')
+            ->where('c.id = :id')
             ->setParameter('id', $id)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
 
-        NotFoundException::throwIfNull($category);
+        try {
+            $category = $q->getSingleResult();
+        } catch (NoResultException) {
+            throw new NotFoundException("Category $id not found");
+        }
+
 
         return $category;
     }
 
     public function getAll(): array
     {
-        $categories = $this->qb->select('c')
+        $qb = $this->em->createQueryBuilder();
+        $categories = $qb->select('c')
             ->from(Category::class, 'c')
             ->getQuery()
             ->getResult();

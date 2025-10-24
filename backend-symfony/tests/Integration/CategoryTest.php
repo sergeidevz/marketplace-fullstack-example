@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Domain\Category\CategoryFactory;
-use App\Domain\Category\ICategoryRepository;
+use App\Domain\Factory\CategoryFactory;
+use App\Domain\RepositoryInterface\ICategoryRepository;
 use App\Domain\Shared\NotFoundException;
 use Faker\Factory;
 use Faker\Generator;
@@ -29,15 +29,12 @@ class CategoryTest extends WebTestCase
         $this->categoryRepository = static::getContainer()->get(ICategoryRepository::class);
     }
 
-    // Populate database with data
-    // Send request
-    // Assert result
 
     public function testUpdateCategory()
     {
         // Arrange
         $category = CategoryFactory::create('cars');
-        $id = $this->categoryRepository->save($category);
+        $id = $this->categoryRepository->create($category);
 
         $update = ['name' => 'books'];
         $json_string = json_encode($update);
@@ -46,8 +43,8 @@ class CategoryTest extends WebTestCase
         $this->client->request(
             method: Request::METHOD_PUT,
             uri: $this->path.$id,
-            content: $json_string,
-            server: ['CONTENT_TYPE' => 'application/json']
+            server: ['CONTENT_TYPE' => 'application/json'],
+            content: $json_string
         );
 
         $response = $this->client->getResponse();
@@ -56,7 +53,7 @@ class CategoryTest extends WebTestCase
 
         // Assert
         $updated = $this->categoryRepository->getById($id);
-        $this->assertEquals('books', $updated->name);
+        $this->assertEquals('books', $updated->getName());
         $this->assertResponseStatusCodeSame(200);
         $this->assertEquals($decoded['id'], $id);
     }
@@ -84,9 +81,9 @@ class CategoryTest extends WebTestCase
 
         // Assert
         $new = $this->categoryRepository->getAll();
-        $this->assertEquals(1, count($new));
+        $this->assertCount(1, $new);
         $this->assertResponseStatusCodeSame(201);
-        $this->assertEquals($decoded['id'], $new[0]->id);
+        $this->assertEquals($decoded['id'], $new[0]->getId());
     }
 
     public function testGetCategories()
@@ -98,9 +95,9 @@ class CategoryTest extends WebTestCase
         $category2 = CategoryFactory::create($name);
         $category3 = CategoryFactory::create($name);
 
-        $this->categoryRepository->save($category1);
-        $this->categoryRepository->save($category2);
-        $this->categoryRepository->save($category3);
+        $this->categoryRepository->create($category1);
+        $this->categoryRepository->create($category2);
+        $this->categoryRepository->create($category3);
 
         // Act
         $this->client->request(Request::METHOD_GET, $this->path);
@@ -125,7 +122,7 @@ class CategoryTest extends WebTestCase
 
         $category = CategoryFactory::create($name);
 
-        $id = $this->categoryRepository->save($category);
+        $id = $this->categoryRepository->create($category);
         $this->assertNotNull($id);
 
         // Act
@@ -143,10 +140,10 @@ class CategoryTest extends WebTestCase
     public function testDeleteCategory()
     {
         // Arrange
-        $id = $this->categoryRepository->save(CategoryFactory::create('books'));
+        $id = $this->categoryRepository->create(CategoryFactory::create('books'));
 
         $found = $this->categoryRepository->getById($id);
-        $this->assertEquals($id, $found->id);
+        $this->assertEquals($id, $found->getId());
 
         // Act
         $this->client->request(Request::METHOD_DELETE, $this->path.$id);

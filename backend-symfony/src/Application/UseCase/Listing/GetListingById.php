@@ -14,7 +14,7 @@ final class GetListingById
     ) {
     }
 
-    public function execute(string $id): ListingDTO
+    public function execute(int $id): ListingDTO
     {
         $domain = $this->listingService->getById($id);
 

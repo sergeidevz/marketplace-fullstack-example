@@ -9,6 +9,7 @@ use App\Domain\Entity\Category;
 interface ICategoryRepository
 {
     public function create(Category $domain): int;
+
     public function update(Category $domain): int;
 
     /**

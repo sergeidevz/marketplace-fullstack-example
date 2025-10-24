@@ -17,12 +17,14 @@ final class ListingService
     public function create(Listing $domain): int
     {
         $id = $this->listingRepository->create($domain);
+
         return $id;
     }
 
     public function update(Listing $domain): int
     {
         $id = $this->listingRepository->update($domain);
+
         return $id;
     }
 

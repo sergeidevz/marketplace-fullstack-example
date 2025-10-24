@@ -29,7 +29,6 @@ class CategoryTest extends WebTestCase
         $this->categoryRepository = static::getContainer()->get(ICategoryRepository::class);
     }
 
-
     public function testUpdateCategory()
     {
         // Arrange

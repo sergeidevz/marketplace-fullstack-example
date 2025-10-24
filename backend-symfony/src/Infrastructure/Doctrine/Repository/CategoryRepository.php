@@ -65,7 +65,6 @@ class CategoryRepository implements ICategoryRepository
             throw new NotFoundException("Category $id not found");
         }
 
-
         return $category;
     }
 

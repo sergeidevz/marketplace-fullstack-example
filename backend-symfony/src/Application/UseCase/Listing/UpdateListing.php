@@ -20,25 +20,25 @@ final class UpdateListing
     {
         $foundListing = $this->listingService->getById($id);
 
-        if ($dto->title !== null) {
+        if (null !== $dto->title) {
             $foundListing->setTitle($dto->title);
         }
-        if ($dto->price !== null) {
+        if (null !== $dto->price) {
             $foundListing->setPrice($dto->price);
         }
-        if ($dto->description !== null) {
+        if (null !== $dto->description) {
             $foundListing->setDescription($dto->description);
         }
-        if ($dto->currency !== null) {
+        if (null !== $dto->currency) {
             $foundListing->setCurrency($dto->currency);
         }
-        if ($dto->location !== null) {
+        if (null !== $dto->location) {
             $foundListing->setLocation($dto->location);
         }
-        if ($dto->status !== null) {
+        if (null !== $dto->status) {
             $foundListing->setStatus($dto->status);
         }
-        if ($dto->categoryId !== null) {
+        if (null !== $dto->categoryId) {
             $category = $this->categoryService->getById($dto->categoryId);
             $foundListing->setCategory($category);
         }

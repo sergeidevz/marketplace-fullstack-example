@@ -100,7 +100,6 @@ class ListingTest extends WebTestCase
             server: ['CONTENT_TYPE' => 'application/json']
         );
 
-
         $response = $this->client->getResponse();
         $content = $response->getContent();
         $decoded = json_decode($content, true);

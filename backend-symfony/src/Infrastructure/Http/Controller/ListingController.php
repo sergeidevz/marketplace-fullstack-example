@@ -12,6 +12,7 @@ use App\Application\UseCase\Listing\GetListingById;
 use App\Application\UseCase\Listing\RemoveListing;
 use App\Application\UseCase\Listing\UpdateListing;
 use App\Domain\Shared\NotFoundException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +23,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ListingController extends AbstractController
 {
     #[Route('/', methods: ['GET'])]
-    public function getAll(GetAllListings $useCase): JsonResponse
+    public function getAll(GetAllListings $useCase, LoggerInterface $logger): JsonResponse
     {
         $listings = $useCase->execute();
+
+        $logger->error("Listings: {listings}", $listings);
 
         return $this->json(compact('listings'));
     }

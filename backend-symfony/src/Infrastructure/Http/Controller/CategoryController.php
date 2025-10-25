@@ -12,20 +12,24 @@ use App\Application\UseCase\Category\GetCategoryById;
 use App\Application\UseCase\Category\RemoveCategory;
 use App\Application\UseCase\Category\UpdateCategory;
 use App\Domain\Shared\NotFoundException;
+use App\Message\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/categories', format: 'json')]
 final class CategoryController extends AbstractController
 {
     #[Route('/', methods: ['GET'])]
-    public function getAll(GetAllCategories $useCase): JsonResponse
+    public function getAll(GetAllCategories $useCase, MessageBusInterface $bus): JsonResponse
     {
         $categories = $useCase->execute();
+
+        $bus->dispatch(new Notification());
 
         return $this->json(compact('categories'));
     }
